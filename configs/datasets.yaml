@@ -1,0 +1,44 @@
+# Shared defaults
+defaults:
+  dataloader: &default_loader
+    batch_size: 32
+    num_workers: 0
+
+# Dataset source definitions
+sources:
+  ptbxl:
+    data_root: /home/fnunez/data/ecg/PTBXL/ptbxl_100
+    train: ptbxl_train.npz
+    test: ptbxl_test.npz
+    fs: 100
+    filter_order: 4
+
+  chapman:
+    data_root: /home/fnunez/data/ecg/Chapman/chapman_100
+    train: chapman_train.npz
+    test: chapman_test.npz
+    fs: 100
+    filter_order: 4
+  
+  sleep_edf: &sleep_edf_base
+    data_root: /media/DATA/data/Sleep/Sleep-EDF/normalized_EEG
+    train: test
+    test: val
+    fs: 100
+    filter_order: 4
+    
+  isruc: &isruc_base
+    data_root: /media/DATA/data/Sleep/ISRUC/normalized_EEG
+    train: test
+    test: val
+    fs: 100
+    filter_order: 4
+
+loaders:
+  spectral:
+    target: data.datasets.SpecPartDataset
+    dataloader_params: *default_loader
+
+  standard:
+    target: data.datasets.NpzDataset
+    dataloader_params: *default_loader

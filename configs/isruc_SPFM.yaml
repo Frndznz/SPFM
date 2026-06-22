@@ -1,0 +1,56 @@
+seed: 123
+dataset_source: "isruc"
+train_loader_type: "real_spfm"
+test_loader_type: "standard"
+partition_strategy: "equal_variance"
+
+solver:
+  name: "ISRUC SPFM"
+  target: engine.solver_SPFM.SPFMTrainer
+  results_folder: ./experiments/ISRUC
+
+  # Optimization
+  base_lr: 0.0003
+  gradient_accumulate_every: 1
+  max_steps: 100000
+  save_cycle: 10000
+
+  data_noise_std: 0.02
+  
+  # Prior for noise sampling
+  prior: "white"
+
+  # Exponential Moving Average
+  ema:
+    decay: 0.995
+    update_interval: 10
+
+  # LR Scheduler
+  scheduler:
+    target: utils.lr_sch.ReduceLROnPlateauWithWarmup
+    params:
+      factor: 0.5
+      patience: 10000
+      min_lr: 1.0e-6
+      warmup: 1000
+      warmup_lr: 1.0e-7
+
+  # Logging
+  logger:
+    enable_wandb: True
+    project: SPFM
+    entity: zrfnz
+    log_freq: 100
+
+model:
+  target: models.SPFM.SPFM_Ensemble
+  params:
+    feature_size: 2
+    sampling_timesteps: 20
+    losses: ["l1", "l1"]
+    solver: "euler"
+  backbones:
+    transformer: "transformer_eeg"
+    mamba: "mamba_eeg"
+    mamformer: "mamformer_eeg"
+

@@ -1,0 +1,126 @@
+# Shared defaults
+defaults:
+  ecg_params: &ecg_base
+    in_channels: 12
+    out_channels: 12
+    num_classes: 7
+    dropout: 0.1
+    seq_length: 1000
+  
+  eeg_params: &eeg_base
+    in_channels: 2
+    out_channels: 2
+    num_classes: 5
+    dropout: 0.1
+    seq_length: 3000
+
+  mamba_params: &mamba_base
+    d_model: 256
+    n_layers: 8
+    d_state: 16
+    d_conv: 4
+    expand: 2
+    time_embed_dim: 256
+    class_embed_dim: 256
+    loss_type: l1
+  
+  transformer_params: &transformer_base
+    d_model: 192
+    n_layers: 8
+    n_heads: 8
+    dim_feedforward: 512
+    time_embed_dim: 256
+    class_embed_dim: 256
+    loss_type: l1
+
+models:
+  mamba_ecg-2:
+    target: models.mamba_1d.Mamba1DModel
+    params:
+      <<: *ecg_base
+      <<: *mamba_base
+  
+  mamba_eeg-2:
+    target: models.mamba_1d.Mamba1DModel
+    params:
+      <<: *eeg_base
+      <<: *mamba_base
+
+  transformer_ecg-2:
+    target: models.transformer_1d.Transformer1DModel  
+    params:
+      <<: *ecg_base
+      <<: *transformer_base
+  
+  transformer_eeg-2:
+    target: models.transformer_1d.Transformer1DModel  
+    params:
+      <<: *eeg_base
+      <<: *transformer_base
+
+  mamformer_ecg-2:
+    target: models.mamformer_1d.MambaTransformer1DModel
+    params:
+      <<: *ecg_base
+      <<: *mamba_base
+      n_heads: 8
+      mamba_ratio: 0.75
+
+  mamformer_eeg-2:
+    target: models.mamformer_1d.MambaTransformer1DModel
+    params:
+      <<: *eeg_base
+      <<: *mamba_base
+      n_heads: 8
+      dim_feedforward: 512
+      mamba_ratio: 0.75    
+
+  transformer_ecg-3:
+    target: models.transformer_1d.Transformer1DModel  
+    params:
+      <<: *ecg_base
+      <<: *transformer_base
+      d_model: 168
+      n_layers: 6
+
+  mamba_ecg-3: 
+    target: models.mamba_1d.Mamba1DModel
+    params:
+      <<: *ecg_base
+      <<: *mamba_base
+      d_model: 208
+
+  mamformer_ecg-3:
+    target: models.mamformer_1d.MambaTransformer1DModel
+    params:
+      <<: *ecg_base
+      <<: *mamba_base
+      n_heads: 8
+      n_layers: 6
+      dim_feedforward: 512
+      mamba_ratio: 0.75
+  
+  transformer_ecg-4:
+    target: models.transformer_1d.Transformer1DModel  
+    params:
+      <<: *ecg_base
+      <<: *transformer_base
+      d_model: 128
+      n_layers: 6
+
+  mamba_ecg-4:
+    target: models.mamba_1d.Mamba1DModel
+    params:
+      <<: *ecg_base
+      <<: *mamba_base
+      d_model: 176
+
+  mamformer_ecg-4:
+    target: models.mamformer_1d.MambaTransformer1DModel
+    params:
+      <<: *ecg_base
+      <<: *mamba_base
+      n_heads: 8
+      n_layers: 4
+      dim_feedforward: 512
+      mamba_ratio: 0.75

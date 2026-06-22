@@ -1,0 +1,45 @@
+seed: 123
+dataset_source: "chapman"
+
+train_loader_type: "standard"
+test_loader_type: "standard"
+
+solver:
+  name: "Chapman FM"
+  target: engine.solver_fm.FMTrainer
+  results_folder: ./experiments/Chapman
+  prior: "white"
+  
+  max_steps: 100000
+  save_cycle: 10000
+  
+  ema:
+    decay: 0.999
+    update_interval: 10
+    
+  scheduler:
+    target: utils.lr_sch.ReduceLROnPlateauWithWarmup
+    params:
+      factor: 0.5
+      patience: 2000
+      min_lr: 1.0e-6
+      warmup: 1000
+      warmup_lr: 1.0e-7
+
+  logger:
+    enable_wandb: True
+    project: SPFM
+    entity: zrfnz
+    log_freq: 100
+
+model:
+  target: models.FMTS.Flow_Matching_TS
+  params:
+    feature_size: 12
+    sampling_timesteps: 40
+    solver: "euler"
+
+backbone:
+  transformer: "transformer_ecg"
+  mamba: "mamba_ecg"
+  mamformer: "mamformer_ecg"
